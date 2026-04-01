@@ -291,21 +291,31 @@ def webhook_booked_call_extract():
         print(f"  — No conversation found")
         return jsonify({"status": "no conversation"}), 200
 
+    print(f"  Fetching conversation for contact {contact_id}...")
     messages = get_conversation_messages(api_key, convo_id, limit=100)
+    print(f"  Got {len(messages)} messages")
+
+    print(f"  Fetching notes for contact {contact_id}...")
     notes = get_contact_notes(api_key, contact_id)
+    print(f"  Got {len(notes)} notes")
+    if notes:
+        print(f"  Notes content: {notes}")
 
     if not messages and not notes:
-        print(f"  — No messages or notes found")
+        print(f"  ✗ No messages or notes found")
         return jsonify({"status": "no data"}), 200
 
-    print(f"  Found {len(messages)} messages, {len(notes)} notes")
+    print(f"  ✓ Found {len(messages)} messages, {len(notes)} notes")
 
     # Extract and format (uses both messages and notes)
+    print(f"  Extracting with fields: {fields}")
     extraction = extract_booked_call_data(messages, notes, fields, client_name)
     formatted_data = extraction["formatted_text"]
     custom_fields = extraction["custom_fields"]
 
-    print(f"  Extracted data:\n{formatted_data}")
+    print(f"  ✓ Extraction complete. Raw extracted fields:")
+    for k, v in custom_fields.items():
+        print(f"    {k}: {v}")
 
     # Map to HighLevel custom field format
     ghl_custom_fields = {}
@@ -313,15 +323,27 @@ def webhook_booked_call_extract():
         if value and value.lower() != "not mentioned":
             ghl_key = f"contact.{field_name}"
             ghl_custom_fields[ghl_key] = value
+            print(f"    → Mapping {field_name} to {ghl_key}")
 
     # Update custom fields
     if ghl_custom_fields:
-        print(f"  Updating custom fields: {list(ghl_custom_fields.keys())}")
-        update_contact_custom_fields(api_key, contact_id, ghl_custom_fields)
+        print(f"  Updating {len(ghl_custom_fields)} custom fields in GHL...")
+        success = update_contact_custom_fields(api_key, contact_id, ghl_custom_fields)
+        if success:
+            print(f"  ✓ Custom fields updated")
+        else:
+            print(f"  ✗ Custom field update failed")
+    else:
+        print(f"  — No fields to update (all were 'not mentioned')")
 
     # Add note
+    print(f"  Adding note to contact...")
     note_text = f"Lead data extracted from booked call:\n{formatted_data}"
-    add_contact_note(api_key, contact_id, note_text)
+    note_success = add_contact_note(api_key, contact_id, note_text)
+    if note_success:
+        print(f"  ✓ Note added")
+    else:
+        print(f"  ✗ Note add failed")
 
     print(f"  ✓ Extraction complete for {contact_name}")
     return jsonify({
