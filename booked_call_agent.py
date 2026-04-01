@@ -37,7 +37,25 @@ def get_anthropic_client():
 
 # Load client configs
 LOCATIONS_PATH = pathlib.Path(__file__).parent / "locations.json"
-BOOKED_CALL_CONFIGS_PATH = pathlib.Path(__file__).parent / "follow_up_bot" / "clients"
+
+# Extraction fields per client
+CLIENT_EXTRACTION_FIELDS = {
+    "Allworks Earthworks": [
+        "postcode",
+        "retaining wall height (metres)",
+        "retaining wall length (metres)",
+        "type of wall (e.g. concrete sleepers, timber, brick)"
+    ],
+    "Trackload": [
+        "postcode",
+        "project details"
+    ],
+    "Breenys Concreting": [
+        "postcode",
+        "project size",
+        "business name"
+    ],
+}
 
 BASE_URL = "https://services.leadconnectorhq.com"
 
@@ -139,18 +157,6 @@ def find_client_by_location(location_id):
     for loc in locations:
         if loc.get("id") == location_id:
             return loc
-    return None
-
-
-def load_booked_call_config(client_name):
-    """Load extraction config from follow_up_bot/clients folder."""
-    # Try to find config file for this client
-    slug = client_name.lower().replace(" ", "_")
-    for pattern in [f"{slug}.json", "*.json"]:
-        for config_file in BOOKED_CALL_CONFIGS_PATH.glob(pattern):
-            config = json.loads(config_file.read_text())
-            if config.get("client_name", "").lower() == client_name.lower():
-                return config
     return None
 
 
@@ -263,18 +269,14 @@ def webhook_booked_call_extract():
         print(f"  ✗ No client found for location: {location_id}")
         return jsonify({"status": "no matching client", "location": location_id}), 200
 
-    print(f"  Client: {client.get('name')}")
+    client_name = client.get("name")
+    print(f"  Client: {client_name}")
 
-    # Load extraction config for this client
-    config = load_booked_call_config(client.get("name"))
-    if not config:
-        print(f"  — No extraction config found, using defaults")
-        config = {}
-
-    fields = config.get("extraction_fields", [])
+    # Get extraction fields for this client
+    fields = CLIENT_EXTRACTION_FIELDS.get(client_name, [])
     if not fields:
-        print(f"  ✗ No extraction fields configured")
-        return jsonify({"status": "no extraction fields", "client": client.get("name")}), 200
+        print(f"  ✗ No extraction fields configured for {client_name}")
+        return jsonify({"status": "no extraction fields", "client": client_name}), 200
 
     print(f"  Fields to extract: {fields}")
 
@@ -299,7 +301,7 @@ def webhook_booked_call_extract():
     print(f"  Found {len(messages)} messages, {len(notes)} notes")
 
     # Extract and format (uses both messages and notes)
-    extraction = extract_booked_call_data(messages, notes, fields, client.get("name"))
+    extraction = extract_booked_call_data(messages, notes, fields, client_name)
     formatted_data = extraction["formatted_text"]
     custom_fields = extraction["custom_fields"]
 
@@ -324,7 +326,7 @@ def webhook_booked_call_extract():
     print(f"  ✓ Extraction complete for {contact_name}")
     return jsonify({
         "status": "ok",
-        "client": client.get("name"),
+        "client": client_name,
         "contact": contact_name,
         "fields_extracted": len(custom_fields),
     }), 200
