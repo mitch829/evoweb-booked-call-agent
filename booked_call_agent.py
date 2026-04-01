@@ -22,7 +22,18 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-anthropic_client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+
+# Initialize client lazily to handle missing env vars at startup
+_anthropic_client = None
+
+def get_anthropic_client():
+    global _anthropic_client
+    if _anthropic_client is None:
+        api_key = os.environ.get("ANTHROPIC_API_KEY")
+        if not api_key:
+            raise EnvironmentError("ANTHROPIC_API_KEY environment variable is not set")
+        _anthropic_client = anthropic.Anthropic(api_key=api_key)
+    return _anthropic_client
 
 # Load client configs from invoicing agent
 INVOICING_AGENT_PATH = pathlib.Path(__file__).parent.parent / "invoicing-agent" / "locations.json"
@@ -178,7 +189,7 @@ Conversation:
 Reply in exactly this format (one per line):
 field: value"""
 
-    response = anthropic_client.messages.create(
+    response = get_anthropic_client().messages.create(
         model="claude-haiku-4-5-20251001",
         max_tokens=300,
         messages=[{"role": "user", "content": prompt}],
