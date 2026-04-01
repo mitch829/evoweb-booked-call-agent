@@ -48,7 +48,6 @@ CLIENT_EXTRACTION_FIELDS = {
             "type of wall (e.g. concrete sleepers, timber, brick)"
         ],
         "field_mapping": {
-            "postcode": "contact.postcode",
             "retaining wall height (metres)": "contact.wall_height",
             "retaining wall length (metres)": "contact.wall_length",
             "type of wall (e.g. concrete sleepers, timber, brick)": "contact.type_of_wall",
@@ -60,7 +59,6 @@ CLIENT_EXTRACTION_FIELDS = {
             "project details"
         ],
         "field_mapping": {
-            "postcode": "contact.postcode",
             "project details": "contact.project_details",
         }
     },
@@ -71,7 +69,6 @@ CLIENT_EXTRACTION_FIELDS = {
             "business name"
         ],
         "field_mapping": {
-            "postcode": "contact.postcode",
             "project size": "contact.project_size",
             "business name": "contact.business_name",
         }
@@ -347,15 +344,21 @@ def webhook_booked_call_extract():
     # Map extracted data to HighLevel custom field format using client's field mapping
     ghl_custom_fields = {}
     for orig_field_name, ghl_key in field_mapping.items():
-        # Convert original field name to the key format used in extraction
-        # e.g. "retaining wall height (metres)" -> "retaining_wall_height_metres"
-        snake_key = orig_field_name.lower().replace(" ", "_").replace("(", "").replace(")", "").replace(".", "")
+        # Try multiple ways to find the matching extracted field
+        snake_key1 = orig_field_name.lower().replace(" ", "_").replace("(", "").replace(")", "").replace(".", "")
+        snake_key2 = orig_field_name.lower().split("(")[0].strip().replace(" ", "_")  # Just the first part
 
-        if snake_key in custom_fields:
-            value = custom_fields[snake_key]
-            if value and value.lower() != "not mentioned":
-                ghl_custom_fields[ghl_key] = value
-                print(f"    → {orig_field_name} -> {ghl_key} = {value}")
+        value = None
+        for key in [snake_key1, snake_key2]:
+            if key in custom_fields:
+                value = custom_fields[key]
+                break
+
+        if value and value.lower() != "not mentioned":
+            ghl_custom_fields[ghl_key] = value
+            print(f"    → {orig_field_name} -> {ghl_key} = {value}")
+        else:
+            print(f"    ✗ {orig_field_name} not found in extracted data")
 
     # Update custom fields
     if ghl_custom_fields:
