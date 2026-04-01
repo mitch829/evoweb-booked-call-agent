@@ -261,6 +261,10 @@ Extract the following information. **If the field appears in the notes (PRIORITY
 Fields to extract:
 {fields_list}
 
+SPECIAL FIELD INSTRUCTIONS:
+- business name: Extract the name of the CLIENT/BUSINESS being quoted for (NOT the service provider). If notes say "builder for evoweb", extract "evoweb"
+- site access: Extract any information about how to access the site or property
+
 Conversation:
 {transcript}{notes_section}
 
