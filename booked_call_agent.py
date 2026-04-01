@@ -35,8 +35,8 @@ def get_anthropic_client():
         _anthropic_client = anthropic.Anthropic(api_key=api_key)
     return _anthropic_client
 
-# Load client configs from invoicing agent
-INVOICING_AGENT_PATH = pathlib.Path(__file__).parent.parent / "invoicing-agent" / "locations.json"
+# Load client configs
+LOCATIONS_PATH = pathlib.Path(__file__).parent / "locations.json"
 BOOKED_CALL_CONFIGS_PATH = pathlib.Path(__file__).parent / "follow_up_bot" / "clients"
 
 BASE_URL = "https://services.leadconnectorhq.com"
@@ -126,9 +126,10 @@ def get_contact_notes(api_key, contact_id):
 # ---------------------------------------------------------------------------
 
 def load_locations():
-    """Load all client locations from invoicing agent."""
-    if INVOICING_AGENT_PATH.exists():
-        return json.loads(INVOICING_AGENT_PATH.read_text())
+    """Load all client locations."""
+    if LOCATIONS_PATH.exists():
+        return json.loads(LOCATIONS_PATH.read_text())
+    print(f"  ⚠ locations.json not found at {LOCATIONS_PATH}")
     return []
 
 
