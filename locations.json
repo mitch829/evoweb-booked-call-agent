@@ -1,0 +1,93 @@
+[
+  {
+    "id": "dIZXw4iqGpWZXJu5yF8p",
+    "name": "Allworks Earthworks",
+    "email": "allworksearthworks@gmail.com",
+    "rate": 25000,
+    "api_key": "pit-d49b8c32-b099-4800-b37f-bd7e1f4ac842"
+  }
+  ,{
+    "id": "tqkdb2v84VAWsjKqBHn7",
+    "name": "Trackload",
+    "email": "william@trackload.com.au",
+    "rate": 20000,
+    "api_key": "pit-a74afcab-de82-4ea1-9b34-47ab462f9314"
+  }
+  ,{
+    "id": "9P2Sym3ksdXs4iBHrgNp",
+    "name": "Breenys Concreting",
+    "email": "breenysconcreting@yahoo.com.au",
+    "rate": 15000,
+    "api_key": "pit-d9e0dad1-2e19-428f-ab9d-30b6f6a06e5d"
+  }
+  ,{
+    "id": "sketZQuisTOq7D9DsV0E",
+    "name": "CBR Pergolas",
+    "email": "andystodulka48@gmail.com",
+    "rate": 10000,
+    "api_key": "pit-973c1ae4-b6cc-4256-87dd-ed1d13ba261c",
+    "tracking_method": "tag",
+    "billable_tags": ["booked strategy call", "call for site visit"],
+    "exclude_tags": ["unqualified"],
+    "include_address": true
+  }
+  ,{
+    "id": "LvlI0FadtYTiDSxAtJ0d",
+    "name": "Earthcut",
+    "email": "admin@earthcut.com.au",
+    "rate": 15000,
+    "api_key": "pit-35af99e1-ec02-48ef-9207-778291ecfd00",
+    "tracking_method": "tag",
+    "billable_tags": ["booked strategy call"],
+    "exclude_tags": []
+  }
+  ,{
+    "id": "A6FqJSFaFSh5lSMcKVYE",
+    "name": "JNM Contracting Services",
+    "email": "jnmcontractingservices@gmail.com",
+    "rate": 17500,
+    "api_key": "pit-aaf5f069-c04e-48f9-8ec5-f9219f0c99a2"
+  }
+  ,{
+    "id": "MbWkziCv3YOdO6gcaiJY",
+    "name": "MXJ Earthworks",
+    "email": "info@mxjearthworks.com",
+    "rate": 20000,
+    "api_key": "pit-48c185a8-0ddf-4bdb-b90a-a33cbfe55cef"
+  }
+  ,{
+    "id": "sLAeygz0d7zUcqjJtNsB",
+    "name": "Next Gen Concrete",
+    "email": "joseph@nextgenconcrete.au",
+    "rate": 20000,
+    "api_key": "pit-c94eeadb-a46a-4a3b-81c4-eb61120c9669"
+  }
+  ,{
+    "id": "2Xba2pdrga1tSQNQcjHv",
+    "name": "Open Roof Pergolas",
+    "email": "ellis@openroofs.com.au",
+    "rate": 15000,
+    "api_key": "pit-5cdd5216-c242-4acd-b96e-8e68289a8b71"
+  }
+  ,{
+    "id": "9XpSgrJMytCyMXGVlqEZ",
+    "name": "Plan Land",
+    "email": "link@planland.com.au",
+    "rate": 15000,
+    "api_key": "pit-617d0e26-ae35-4784-90b8-3be1fe90b232"
+  }
+  ,{
+    "id": "ugLOdhOAD1EiMaQUyaXD",
+    "name": "Poletta Concrete Constructions",
+    "email": "polettaconcreteconstructions@gmail.com",
+    "rate": 20000,
+    "api_key": "pit-5e98a843-8f8b-41d2-b219-b1e6093a5928"
+  }
+  ,{
+    "id": "EeJRLtMIUxHIcQHAwnLK",
+    "name": "The Gym",
+    "email": "fauxgymau@gmail.com",
+    "rate": 10000,
+    "api_key": "pit-575ea439-a156-4f40-8dbc-88fe9f55e136"
+  }
+]
