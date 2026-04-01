@@ -85,7 +85,7 @@ CLIENT_EXTRACTION_FIELDS = {
         "field_mapping": {
             "postcode": {"key": "postalCode", "type": "standard"},
             "project size": {"key": "project_size_sqm", "type": "custom"},
-            "business name": {"key": "company_name", "type": "custom"},
+            "business name": {"key": "contact.company_name", "type": "custom"},
         }
     },
 }
