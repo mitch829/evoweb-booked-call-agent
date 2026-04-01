@@ -88,6 +88,22 @@ CLIENT_EXTRACTION_FIELDS = {
             "business name": {"key": "business_name", "type": "custom"},
         }
     },
+    "MXJ Earthworks": {
+        "fields": [
+            "postcode",
+            "retaining wall height (metres)",
+            "retaining wall length (metres)",
+            "type of wall (e.g. concrete sleepers, timber, brick)",
+            "site access"
+        ],
+        "field_mapping": {
+            "postcode": {"key": "postalCode", "type": "standard"},
+            "retaining wall height (metres)": {"key": "wall_height", "type": "custom"},
+            "retaining wall length (metres)": {"key": "wall_length", "type": "custom"},
+            "type of wall (e.g. concrete sleepers, timber, brick)": {"key": "type_of_wall", "type": "custom"},
+            "site access": {"key": "site_access", "type": "custom"},
+        }
+    },
 }
 
 BASE_URL = "https://services.leadconnectorhq.com"
