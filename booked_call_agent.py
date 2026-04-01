@@ -217,6 +217,9 @@ Fields to extract:
 Conversation:
 {transcript}{notes_section}
 
+IMPORTANT: For fields with units (metres, sqm, etc), include the units in the value.
+For example: "2.2 metres" not just "2.2"
+
 Reply in exactly this format (one per line):
 field: value"""
 
