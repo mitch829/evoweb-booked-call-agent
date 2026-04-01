@@ -131,6 +131,7 @@ def update_contact_custom_fields(api_key, contact_id, custom_fields):
         print(f"  ✓ Custom fields updated for contact {contact_id}")
     else:
         print(f"  ✗ Custom field update failed: {resp.status_code}")
+        print(f"     Response: {resp.text[:300]}")
     return resp.ok
 
 
