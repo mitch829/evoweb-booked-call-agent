@@ -76,7 +76,7 @@ CLIENT_EXTRACTION_FIELDS = {
             "business name": {"key": "business_name", "type": "custom"},
         }
     },
-    "Paletta Concrete Constructions": {
+    "Poletta Concrete Constructions": {
         "fields": [
             "postcode",
             "project size",
