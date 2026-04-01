@@ -230,12 +230,27 @@ def webhook_booked_call_extract():
     """
     data = request.json or {}
     print(f"\n📞 Booked Call Extraction Webhook")
-    print(f"Raw payload: {json.dumps(data)[:300]}")
+    print(f"Full raw payload: {json.dumps(data)[:500]}")
 
-    location_id = (data.get("locationId") or data.get("location", {}).get("id", ""))
-    contact_id = (data.get("contactId") or data.get("contact_id") or
-                  data.get("contact", {}).get("id", ""))
-    contact_name = data.get("contactName") or data.get("contact", {}).get("firstName", "Unknown")
+    # Try multiple ways to extract locationId (HighLevel can send it different ways)
+    location_id = (
+        data.get("locationId") or
+        data.get("location_id") or
+        data.get("location", {}).get("id", "") or
+        data.get("contact", {}).get("locationId", "")
+    )
+
+    contact_id = (
+        data.get("contactId") or
+        data.get("contact_id") or
+        data.get("contact", {}).get("id", "")
+    )
+
+    contact_name = (
+        data.get("contactName") or
+        data.get("contact_name") or
+        data.get("contact", {}).get("firstName", "Unknown")
+    )
 
     print(f"  Location: {location_id}")
     print(f"  Contact: {contact_name} ({contact_id})")
