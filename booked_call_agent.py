@@ -38,23 +38,44 @@ def get_anthropic_client():
 # Load client configs
 LOCATIONS_PATH = pathlib.Path(__file__).parent / "locations.json"
 
-# Extraction fields per client
+# Extraction fields per client and mapping to HighLevel custom field keys
 CLIENT_EXTRACTION_FIELDS = {
-    "Allworks Earthworks": [
-        "postcode",
-        "retaining wall height (metres)",
-        "retaining wall length (metres)",
-        "type of wall (e.g. concrete sleepers, timber, brick)"
-    ],
-    "Trackload": [
-        "postcode",
-        "project details"
-    ],
-    "Breenys Concreting": [
-        "postcode",
-        "project size",
-        "business name"
-    ],
+    "Allworks Earthworks": {
+        "fields": [
+            "postcode",
+            "retaining wall height (metres)",
+            "retaining wall length (metres)",
+            "type of wall (e.g. concrete sleepers, timber, brick)"
+        ],
+        "field_mapping": {
+            "postcode": "contact.postcode",
+            "retaining wall height (metres)": "contact.wall_height",
+            "retaining wall length (metres)": "contact.wall_length",
+            "type of wall (e.g. concrete sleepers, timber, brick)": "contact.type_of_wall",
+        }
+    },
+    "Trackload": {
+        "fields": [
+            "postcode",
+            "project details"
+        ],
+        "field_mapping": {
+            "postcode": "contact.postcode",
+            "project details": "contact.project_details",
+        }
+    },
+    "Breenys Concreting": {
+        "fields": [
+            "postcode",
+            "project size",
+            "business name"
+        ],
+        "field_mapping": {
+            "postcode": "contact.postcode",
+            "project size": "contact.project_size",
+            "business name": "contact.business_name",
+        }
+    },
 }
 
 BASE_URL = "https://services.leadconnectorhq.com"
@@ -273,7 +294,13 @@ def webhook_booked_call_extract():
     print(f"  Client: {client_name}")
 
     # Get extraction fields for this client
-    fields = CLIENT_EXTRACTION_FIELDS.get(client_name, [])
+    client_config = CLIENT_EXTRACTION_FIELDS.get(client_name)
+    if not client_config:
+        print(f"  ✗ No extraction config for {client_name}")
+        return jsonify({"status": "no extraction fields", "client": client_name}), 200
+
+    fields = client_config.get("fields", [])
+    field_mapping = client_config.get("field_mapping", {})
     if not fields:
         print(f"  ✗ No extraction fields configured for {client_name}")
         return jsonify({"status": "no extraction fields", "client": client_name}), 200
@@ -317,13 +344,18 @@ def webhook_booked_call_extract():
     for k, v in custom_fields.items():
         print(f"    {k}: {v}")
 
-    # Map to HighLevel custom field format
+    # Map extracted data to HighLevel custom field format using client's field mapping
     ghl_custom_fields = {}
-    for field_name, value in custom_fields.items():
-        if value and value.lower() != "not mentioned":
-            ghl_key = f"contact.{field_name}"
-            ghl_custom_fields[ghl_key] = value
-            print(f"    → Mapping {field_name} to {ghl_key}")
+    for orig_field_name, ghl_key in field_mapping.items():
+        # Convert original field name to the key format used in extraction
+        # e.g. "retaining wall height (metres)" -> "retaining_wall_height_metres"
+        snake_key = orig_field_name.lower().replace(" ", "_").replace("(", "").replace(")", "").replace(".", "")
+
+        if snake_key in custom_fields:
+            value = custom_fields[snake_key]
+            if value and value.lower() != "not mentioned":
+                ghl_custom_fields[ghl_key] = value
+                print(f"    → {orig_field_name} -> {ghl_key} = {value}")
 
     # Update custom fields
     if ghl_custom_fields:
