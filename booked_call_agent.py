@@ -48,9 +48,9 @@ CLIENT_EXTRACTION_FIELDS = {
             "type of wall (e.g. concrete sleepers, timber, brick)"
         ],
         "field_mapping": {
-            "retaining wall height (metres)": "contact.wall_height",
-            "retaining wall length (metres)": "contact.wall_length",
-            "type of wall (e.g. concrete sleepers, timber, brick)": "contact.type_of_wall",
+            "retaining wall height (metres)": "wall_height",
+            "retaining wall length (metres)": "wall_length",
+            "type of wall (e.g. concrete sleepers, timber, brick)": "type_of_wall",
         }
     },
     "Trackload": {
@@ -59,7 +59,7 @@ CLIENT_EXTRACTION_FIELDS = {
             "project details"
         ],
         "field_mapping": {
-            "project details": "contact.project_details",
+            "project details": "project_details",
         }
     },
     "Breenys Concreting": {
@@ -69,8 +69,8 @@ CLIENT_EXTRACTION_FIELDS = {
             "business name"
         ],
         "field_mapping": {
-            "project size": "contact.project_size",
-            "business name": "contact.business_name",
+            "project size": "project_size",
+            "business name": "business_name",
         }
     },
 }
