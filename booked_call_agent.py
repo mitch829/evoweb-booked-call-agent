@@ -106,6 +106,18 @@ CLIENT_EXTRACTION_FIELDS = {
             "site access": {"key": "site_access", "type": "custom"},
         }
     },
+    "Next Gen Concrete": {
+        "fields": [
+            "postcode",
+            "project size",
+            "business name"
+        ],
+        "field_mapping": {
+            "postcode": {"key": "postal_code", "type": "custom"},
+            "project size": {"key": "project_size_sqm", "type": "custom"},
+            "business name": {"key": "business_name", "type": "custom"},
+        }
+    },
 }
 
 BASE_URL = "https://services.leadconnectorhq.com"
