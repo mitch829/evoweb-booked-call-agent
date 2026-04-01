@@ -98,6 +98,18 @@ def add_contact_note(api_key, contact_id, note_text):
     return resp.ok
 
 
+def get_contact_notes(api_key, contact_id):
+    """Fetch all notes for a contact."""
+    resp = requests.get(
+        f"{BASE_URL}/contacts/{contact_id}/notes",
+        headers=_headers(api_key),
+        timeout=10,
+    )
+    if resp.ok:
+        return [n.get("body", "") for n in resp.json().get("notes", [])]
+    return []
+
+
 # ---------------------------------------------------------------------------
 # Client lookup
 # ---------------------------------------------------------------------------
@@ -134,26 +146,34 @@ def load_booked_call_config(client_name):
 # Data extraction
 # ---------------------------------------------------------------------------
 
-def extract_booked_call_data(messages, fields, client_name):
+def extract_booked_call_data(messages, notes, fields, client_name):
     """
-    Extract lead data from conversation using Claude.
+    Extract lead data from conversation messages and/or notes using Claude.
     Returns both formatted text and structured dict for custom fields.
     """
+    # Build transcript from messages
     transcript = "\n".join(
         f"{'Lead' if m.get('direction') == 'inbound' else 'Bot'}: {m.get('body', '')}"
         for m in messages if m.get("body")
     )
+
+    # Add notes if available
+    notes_section = ""
+    if notes:
+        notes_text = "\n".join(f"- {note}" for note in notes if note)
+        notes_section = f"\n\nContact Notes:\n{notes_text}"
+
     fields_list = "\n".join(f"- {f}" for f in fields)
 
-    prompt = f"""You are reviewing a conversation between an AI chatbot and a lead for {client_name}.
+    prompt = f"""You are reviewing a conversation and notes for a lead booking with {client_name}.
 
-Extract the following information from the conversation. If a field is not mentioned, write "Not mentioned".
+Extract the following information. If a field is not mentioned, write "Not mentioned".
 
 Fields to extract:
 {fields_list}
 
 Conversation:
-{transcript}
+{transcript}{notes_section}
 
 Reply in exactly this format (one per line):
 field: value"""
@@ -242,14 +262,16 @@ def webhook_booked_call_extract():
         return jsonify({"status": "no conversation"}), 200
 
     messages = get_conversation_messages(api_key, convo_id, limit=100)
-    if not messages:
-        print(f"  — No messages in conversation")
-        return jsonify({"status": "no messages"}), 200
+    notes = get_contact_notes(api_key, contact_id)
 
-    print(f"  Found {len(messages)} messages in conversation")
+    if not messages and not notes:
+        print(f"  — No messages or notes found")
+        return jsonify({"status": "no data"}), 200
 
-    # Extract and format
-    extraction = extract_booked_call_data(messages, fields, client.get("name"))
+    print(f"  Found {len(messages)} messages, {len(notes)} notes")
+
+    # Extract and format (uses both messages and notes)
+    extraction = extract_booked_call_data(messages, notes, fields, client.get("name"))
     formatted_data = extraction["formatted_text"]
     custom_fields = extraction["custom_fields"]
 
