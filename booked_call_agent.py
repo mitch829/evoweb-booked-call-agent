@@ -328,6 +328,15 @@ def webhook_booked_call_extract():
     }), 200
 
 
+@app.route("/webhook/booked-call-extract-debug", methods=["POST"])
+def webhook_debug():
+    """Debug endpoint — just logs and returns the raw payload."""
+    data = request.json or {}
+    print(f"\n🔍 DEBUG WEBHOOK PAYLOAD:")
+    print(json.dumps(data, indent=2)[:1000])
+    return jsonify({"debug": "payload logged", "received_keys": list(data.keys())}), 200
+
+
 @app.route("/health", methods=["GET"])
 def health():
     return jsonify({"status": "ok", "service": "evoweb-booked-call-agent"}), 200
