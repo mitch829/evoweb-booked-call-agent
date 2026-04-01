@@ -162,6 +162,7 @@ def extract_booked_call_data(messages, notes, fields, client_name):
     """
     Extract lead data from conversation messages and/or notes using Claude.
     Returns both formatted text and structured dict for custom fields.
+    Prioritizes notes over other sources when both exist.
     """
     # Build transcript from messages
     transcript = "\n".join(
@@ -169,17 +170,17 @@ def extract_booked_call_data(messages, notes, fields, client_name):
         for m in messages if m.get("body")
     )
 
-    # Add notes if available
+    # Add notes if available - these are priority
     notes_section = ""
     if notes:
         notes_text = "\n".join(f"- {note}" for note in notes if note)
-        notes_section = f"\n\nContact Notes:\n{notes_text}"
+        notes_section = f"\n\n**IMPORTANT - PRIORITY DATA (from notes):**\n{notes_text}"
 
     fields_list = "\n".join(f"- {f}" for f in fields)
 
     prompt = f"""You are reviewing a conversation and notes for a lead booking with {client_name}.
 
-Extract the following information. If a field is not mentioned, write "Not mentioned".
+Extract the following information. **If the field appears in the notes (PRIORITY DATA), use that value. Otherwise extract from the conversation. If a field is not mentioned anywhere, write "Not mentioned".**
 
 Fields to extract:
 {fields_list}
