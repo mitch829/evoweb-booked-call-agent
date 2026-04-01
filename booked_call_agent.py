@@ -118,13 +118,17 @@ def get_conversation_messages(api_key, conversation_id, limit=100):
 
 
 def update_contact_custom_fields(api_key, contact_id, custom_fields):
-    """Update contact custom fields."""
+    """Update contact custom fields. custom_fields should be a dict of key: value."""
     if not custom_fields:
         return True
+
+    # Convert dict to array format expected by HighLevel API
+    fields_array = [{"key": k, "value": v} for k, v in custom_fields.items()]
+
     resp = requests.put(
         f"{BASE_URL}/contacts/{contact_id}",
         headers=_headers(api_key),
-        json={"customFields": custom_fields},
+        json={"customFields": fields_array},
         timeout=10,
     )
     if resp.ok:
