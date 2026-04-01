@@ -48,6 +48,7 @@ CLIENT_EXTRACTION_FIELDS = {
             "type of wall (e.g. concrete sleepers, timber, brick)"
         ],
         "field_mapping": {
+            "postcode": "postcode",
             "retaining wall height (metres)": "wall_height",
             "retaining wall length (metres)": "wall_length",
             "type of wall (e.g. concrete sleepers, timber, brick)": "type_of_wall",
