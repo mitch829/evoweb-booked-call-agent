@@ -395,6 +395,9 @@ def webhook_booked_call_extract():
         return jsonify({"status": "no conversation"}), 200
 
     print(f"  Fetching conversation for contact {contact_id}...")
+    # Small delay to allow HighLevel to index messages
+    import time
+    time.sleep(1)
     messages = get_conversation_messages(api_key, convo_id, limit=100)
     print(f"  Got {len(messages)} messages")
 
