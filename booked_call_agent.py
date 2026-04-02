@@ -158,7 +158,15 @@ def get_conversation_messages(api_key, conversation_id, limit=100):
         timeout=10,
     )
     if resp.ok:
-        return resp.json().get("messages", {}).get("messages", [])
+        data = resp.json()
+        # Try different response structures
+        if "messages" in data and isinstance(data["messages"], list):
+            return data["messages"]
+        elif "messages" in data and isinstance(data["messages"], dict):
+            return data["messages"].get("messages", [])
+        return []
+    else:
+        print(f"  ✗ Message fetch failed: {resp.status_code} - {resp.text[:200]}")
     return []
 
 
