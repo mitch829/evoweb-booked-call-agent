@@ -1,0 +1,8 @@
+flask
+gunicorn
+anthropic
+python-dotenv
+requests
+apscheduler
+pytz
+psycopg2-binary
