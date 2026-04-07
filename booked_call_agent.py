@@ -354,6 +354,8 @@ def webhook_booked_call_extract():
     contact_name = (
         data.get("contactName") or
         data.get("contact_name") or
+        data.get("full_name") or
+        data.get("first_name") or
         data.get("contact", {}).get("firstName", "Unknown")
     )
 
@@ -475,6 +477,10 @@ def webhook_booked_call_extract():
         print(f"  ✓ Note added")
     else:
         print(f"  ✗ Note add failed")
+
+    # Send email notification with extracted data
+    print(f"  Sending booked call email...")
+    send_booked_call_email(client_name, contact_name, formatted_data)
 
     print(f"  ✓ Extraction complete for {contact_name}")
     return jsonify({
