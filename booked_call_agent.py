@@ -478,10 +478,6 @@ def webhook_booked_call_extract():
     else:
         print(f"  ✗ Note add failed")
 
-    # Send email notification with extracted data
-    print(f"  Sending booked call email...")
-    send_booked_call_email(client_name, contact_name, formatted_data)
-
     print(f"  ✓ Extraction complete for {contact_name}")
     return jsonify({
         "status": "ok",
