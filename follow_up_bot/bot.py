@@ -411,6 +411,7 @@ print(f"[INIT] Scheduler started at {datetime.datetime.now().isoformat()}", flus
 @app.route("/webhook/appointment", methods=["POST"])
 def webhook_appointment():
     data = request.json or {}
+    print(f"[WEBHOOK/appointment] Raw payload: {json.dumps(data)}", flush=True)
 
     # Support both GHL payload formats
     location_id = (data.get("locationId")
@@ -498,9 +499,11 @@ def webhook_appointment():
             if not call_time:
                 print(f"  ⚠️  WARNING: No startTime in webhook for {contact_name}. GHL may not have sent it.")
                 return jsonify({"status": "no call time, cannot schedule"}), 400
-            call_dt = datetime.datetime.fromisoformat(
-                call_time.replace("Z", "+00:00")
-            ).astimezone(tz)
+            # Strip timezone info and treat the time as-is in the client's local timezone
+            # GHL sends times in UTC format but the calendar is set to local time,
+            # so 3pm AEST in GHL = "15:00:00Z" in the webhook — we want 3pm AEST, not 1am AEST
+            raw_time = call_time.replace("Z", "").replace("+00:00", "").split("+")[0]
+            call_dt = tz.localize(datetime.datetime.fromisoformat(raw_time))
             first_msg_at = call_dt + datetime.timedelta(hours=1)
             print(f"  ✓ Scheduled {contact_name}: call at {call_dt.strftime('%I:%M %p %Z')}, message at {first_msg_at.strftime('%I:%M %p %Z')}")
             from lead_queue import _get_conn, _ph
