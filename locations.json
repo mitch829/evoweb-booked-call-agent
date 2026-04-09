@@ -42,13 +42,6 @@
     "exclude_tags": []
   }
   ,{
-    "id": "A6FqJSFaFSh5lSMcKVYE",
-    "name": "JNM Contracting Services",
-    "email": "jnmcontractingservices@gmail.com",
-    "rate": 17500,
-    "api_key": "pit-aaf5f069-c04e-48f9-8ec5-f9219f0c99a2"
-  }
-  ,{
     "id": "MbWkziCv3YOdO6gcaiJY",
     "name": "MXJ Earthworks",
     "email": "info@mxjearthworks.com",
@@ -77,17 +70,17 @@
     "api_key": "pit-617d0e26-ae35-4784-90b8-3be1fe90b232"
   }
   ,{
+    "id": "qPUGU3cYsKRYa4tTzUGs",
+    "name": "Cain Excavation Group",
+    "email": "Brad@cainexcavationgroup.com.au",
+    "rate": 17500,
+    "api_key": "pit-586a9b37-faea-42ae-84c5-826721ea4b6a"
+  }
+  ,{
     "id": "ugLOdhOAD1EiMaQUyaXD",
     "name": "Poletta Concrete Constructions",
     "email": "polettaconcreteconstructions@gmail.com",
     "rate": 20000,
     "api_key": "pit-5e98a843-8f8b-41d2-b219-b1e6093a5928"
-  }
-  ,{
-    "id": "EeJRLtMIUxHIcQHAwnLK",
-    "name": "The Gym",
-    "email": "fauxgymau@gmail.com",
-    "rate": 10000,
-    "api_key": "pit-575ea439-a156-4f40-8dbc-88fe9f55e136"
   }
 ]
