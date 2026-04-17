@@ -409,15 +409,15 @@ def webhook_booked_call_extract():
     # Fetch conversation from GHL
     convo_id = get_contact_conversation(api_key, location_id, contact_id)
     if not convo_id:
-        print(f"  — No conversation found")
-        return jsonify({"status": "no conversation"}), 200
-
-    print(f"  Fetching conversation for contact {contact_id}...")
-    # Small delay to allow HighLevel to index messages
-    import time
-    time.sleep(1)
-    messages = get_conversation_messages(api_key, convo_id, limit=100)
-    print(f"  Got {len(messages)} messages")
+        print(f"  — No conversation found, will check notes")
+        messages = []
+    else:
+        print(f"  Fetching conversation for contact {contact_id}...")
+        # Small delay to allow HighLevel to index messages
+        import time
+        time.sleep(1)
+        messages = get_conversation_messages(api_key, convo_id, limit=100)
+        print(f"  Got {len(messages)} messages")
 
     print(f"  Fetching notes for contact {contact_id}...")
     notes = get_contact_notes(api_key, contact_id)
