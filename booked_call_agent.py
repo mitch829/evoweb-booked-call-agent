@@ -118,7 +118,7 @@ CLIENT_EXTRACTION_FIELDS = {
             "postcode": {"key": "postalCode", "type": "standard"},
             "retaining wall height (metres)": {"key": "wall_height", "type": "custom"},
             "retaining wall length (metres)": {"key": "wall_length", "type": "custom"},
-            "type of wall (e.g. concrete sleepers, timber, brick)": {"key": "type_of_wall", "type": "custom"},
+            "type of wall (e.g. concrete sleepers, timber, brick)": {"key": "wall_type", "type": "custom"},
             "site access": {"key": "site_access", "type": "custom"},
         }
     },
