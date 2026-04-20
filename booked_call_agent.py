@@ -112,7 +112,8 @@ CLIENT_EXTRACTION_FIELDS = {
             "retaining wall height (metres)",
             "retaining wall length (metres)",
             "type of wall (e.g. concrete sleepers, timber, brick)",
-            "site access"
+            "site access",
+            "plans for project (yes or no)"
         ],
         "field_mapping": {
             "postcode": {"key": "postalCode", "type": "standard"},
@@ -120,6 +121,7 @@ CLIENT_EXTRACTION_FIELDS = {
             "retaining wall length (metres)": {"key": "wall_length", "type": "custom"},
             "type of wall (e.g. concrete sleepers, timber, brick)": {"key": "wall_type", "type": "custom"},
             "site access": {"key": "site_access", "type": "custom"},
+            "plans for project (yes or no)": {"key": "plans_for_project", "type": "custom"},
         }
     },
     "Next Gen Concrete": {
